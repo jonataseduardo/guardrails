@@ -40,45 +40,11 @@ For example the module `sound.effects.echo` may be imported as follows:
     ...
     echo.EchoFilter(input, output, delay=0.7, atten=4)
 
-Do not use relative names in imports. Even if the module is in the same
-package, use the full package name. This helps prevent unintentionally
-importing a package twice.
 
-### 2.3 Packages
-
-All new code should import each module by its full package name.
-
-Imports should be as follows:
-
-    Yes:
-      # Reference absl.flags in code with the complete name (verbose).
-      import absl.flags
-      from doctor.who import jodie
-
-      _FOO = absl.flags.DEFINE_string(...)
-
-    Yes:
-      # Reference flags in code with just the module name (common).
-      from absl import flags
-      from doctor.who import jodie
-
-      _FOO = flags.DEFINE_string(...)
-
-*(assume this file lives in `doctor/who/` where `jodie.py` also exists)*
-
-    No:
-      # Unclear what module the author wanted and what will be imported.  The actual
-      # import behavior depends on external factors controlling sys.path.
-      # Which possible jodie module did the author intend to import?
-      import jodie
-
-The directory the main binary is located in should not be assumed to be
-in `sys.path` despite that happening in some environments. This being
-the case, code should assume that `import jodie` refers to a third-party
-or top-level package named `jodie`, not a local `jodie.py`.
+Make the following section of a markdown document shorter 
+The 
 
 ### 2.4 Exceptions
-
 
 Exceptions must follow certain conditions:
 
@@ -91,46 +57,33 @@ Exceptions must follow certain conditions:
     indicate that some unexpected event occurred. If an exception is
     desired in the latter cases, use a raise statement. For example:
 
-        Yes:
-          def connect_to_next_port(self, minimum: int) -> int:
-            """Connects to the next available port.
+        Example:
+    ```
+      def connect_to_next_port(self, minimum: int) -> int:
+        """Connects to the next available port.
 
-            Args:
-              minimum: A port value greater or equal to 1024.
+        Args:
+          minimum: A port value greater or equal to 1024.
 
-            Returns:
-              The new minimum port.
+        Returns:
+          The new minimum port.
 
-            Raises:
-              ConnectionError: If no available port is found.
-            """
-            if minimum < 1024:
-              # Note that this raising of ValueError is not mentioned in the doc
-              # string's "Raises:" section because it is not appropriate to
-              # guarantee this specific behavioral reaction to API misuse.
-              raise ValueError(f'Min. port must be at least 1024, not {minimum}.')
-            port = self._find_next_open_port(minimum)
-            if port is None:
-              raise ConnectionError(
-                  f'Could not connect to service on port {minimum} or higher.')
-            assert port >= minimum, (
-                f'Unexpected port {port} when minimum was {minimum}.')
-            return port
-
-        No:
-          def connect_to_next_port(self, minimum: int) -> int:
-            """Connects to the next available port.
-
-            Args:
-              minimum: A port value greater or equal to 1024.
-
-            Returns:
-              The new minimum port.
-            """
-            assert minimum >= 1024, 'Minimum port must be at least 1024.'
-            port = self._find_next_open_port(minimum)
-            assert port is not None
-            return port
+        Raises:
+          ConnectionError: If no available port is found.
+        """
+        if minimum < 1024:
+          # Note that this raising of ValueError is not mentioned in the doc
+          # string's "Raises:" section because it is not appropriate to
+          # guarantee this specific behavioral reaction to API misuse.
+          raise ValueError(f'Min. port must be at least 1024, not {minimum}.')
+        port = self._find_next_open_port(minimum)
+        if port is None:
+          raise ConnectionError(
+              f'Could not connect to service on port {minimum} or higher.')
+        assert port >= minimum, (
+            f'Unexpected port {port} when minimum was {minimum}.')
+        return port
+    ```
 
 -   Libraries or packages may define their own exceptions. When doing so
     they must inherit from an existing exception class. Exception names
@@ -216,7 +169,7 @@ expression, `for` clause, filter expression. Multiple `for` clauses or
 filter expressions are not permitted. Use loops instead when things get
 more complicated.
 
-    Yes:
+    Example:
       result = [mapping_expr for value in iterable if filter_expr]
 
       result = [{'key': value} for value in iterable
@@ -248,20 +201,6 @@ more complicated.
       eat(jelly_bean for jelly_bean in jelly_beans
           if jelly_bean.color == 'black')
 
-    No:
-      result = [complicated_transform(
-                    x, some_argument=x+1)
-                for x in iterable if predicate(x)]
-
-      result = [(x, y) for x in range(10) for y in range(5) if x * y > 10]
-
-      return ((x, y, z)
-              for x in range(5)
-              for y in range(5)
-              if x != y
-              for z in range(5)
-              if y != z)
-
 ### 2.8 Default Iterators and Operators
 
 Use default iterators and operators for types that support them, like
@@ -277,13 +216,11 @@ lists, dictionaries, and files. The built-in types define iterator
 methods, too. Prefer these methods to methods that return lists, except
 that you should not mutate a container while iterating over it.
 
-    Yes:  for key in adict: ...
+    Example:  for key in adict: ...
           if obj in alist: ...
           for line in afile: ...
           for k, v in adict.items(): ...
 
-    No:   for key in adict.keys(): ...
-          for line in afile.readlines(): ...
 
 ### 2.9 Generators
 
@@ -330,81 +267,10 @@ Okay to use for simple cases. Each portion must fit on one line:
 true-expression, if-expression, else-expression. Use a complete if
 statement when things get more complicated.
 
-    Yes:
+    Example:
         one_line = 'yes' if predicate(value) else 'no'
         slightly_split = ('yes' if predicate(value)
                           else 'no, nein, nyet')
-        the_longest_ternary_style_that_can_be_done = (
-            'yes, true, affirmative, confirmed, correct'
-            if predicate(value)
-            else 'no, false, negative, nay')
-
-    No:
-        bad_line_breaking = ('yes' if predicate(value) else
-                             'no')
-        portion_too_long = ('yes'
-                            if some_long_module.some_long_predicate_function(
-                                really_long_variable_name)
-                            else 'no, false, negative, nay')
-
-
-### 2.12 Default Argument Values
-
-
-    Yes: def foo(a, b=None):
-             if b is None:
-                 b = []
-    Yes: def foo(a, b: Sequence | None = None):
-             if b is None:
-                 b = []
-    Yes: def foo(a, b: Sequence = ()):  # Empty tuple OK since tuples are immutable.
-             ...
-
-    from absl import flags
-    _FOO = flags.DEFINE_string(...)
-
-    No:  def foo(a, b=[]):
-             ...
-    No:  def foo(a, b=time.time()):  # The time the module was loaded???
-             ...
-    No:  def foo(a, b=_FOO.value):  # sys.argv has not yet been parsed...
-             ...
-    No:  def foo(a, b: Mapping = {}):  # Could still get passed to unchecked code.
-             ...
-
-### 2.13 Properties
-
-Properties may be used to control getting or setting attributes that
-require trivial computations or logic. Property implementations must
-match the general expectations of regular attribute access: that they
-are cheap, straightforward, and unsurprising.
-
--   Allows for an attribute access and assignment API rather than
-    [getter and setter](#getters-and-setters) method calls.
--   Can be used to make an attribute read-only.
--   Allows calculations to be lazy.
--   Provides a way to maintain the public interface of a class when the
-    internals evolve independently of class users.
-
-Properties are allowed, but, like operator overloading, should only be
-used when necessary and match the expectations of typical attribute
-access; follow the [getters and setters](#getters-and-setters) rules
-otherwise.
-
-For example, using a property to simply both get and set an internal
-attribute isn’t allowed: there is no computation occurring, so the
-property is unnecessary ([make the attribute public
-instead](#getters-and-setters)). In comparison, using a property to
-control attribute access or to calculate a *trivially* derived value is
-allowed: the logic is simple and unsurprising.
-
-Properties should be created with the `@property`
-[decorator](#s2.17-function-and-method-decorators). Manually
-implementing a property descriptor is considered a [power
-feature](#power-features).
-
-Inheritance with properties can be non-obvious. Do not use properties to
-implement computations a subclass may ever want to override and extend.
 
 
 ### 2.14 True/False Evaluations
@@ -432,7 +298,7 @@ though:
     value which is known to be an integer (and is not the result of
     `len()`) against the integer 0.
 
-        Yes: if not users:
+        Example: if not users:
                  print('no users')
 
              if i % 10 == 0:
@@ -537,16 +403,6 @@ appropriate.
 3 Python Style Rules
 --------------------
 
-### 3.1 Semicolons
-
-Do not terminate your lines with semicolons, and do not use semicolons
-to put two statements on the same line.
-
-<span id="s3.2-line-length"></span> <span id="32-line-length"></span>
-
-<span id="line-length"></span>
-
-
 #### 3.8.1 Docstrings
 
 Python uses *docstrings* to document code. A docstring is a string that
@@ -605,12 +461,6 @@ Docstrings that do not provide any new information should not be used.
 
     """Tests for foo.bar."""
 
-<span id="s3.8.3-functions-and-methods"></span> <span
-id="383-functions-and-methods"></span> <span
-id="functions-and-methods"></span>
-
-<span id="function-docs"></span>
-
 #### 3.8.3 Functions and Methods
 
 In this section, “function” means a method, function, generator, or
@@ -659,7 +509,6 @@ sections can be omitted in cases where the function’s name and signature
 are informative enough that it can be aptly described using a one-line
 docstring.
 
-<span id="doc-function-args"></span>  
 [*Args:*](#doc-function-args)  
 List each parameter by name. A description should follow the name, and
 be separated by a colon followed by either a space or newline. If the
@@ -671,7 +520,6 @@ corresponding type annotation. If a function accepts `*foo` (variable
 length argument lists) and/or `**bar` (arbitrary keyword arguments),
 they should be listed as `*foo` and `**bar`.
 
-<span id="doc-function-returns"></span>  
 [*Returns:* (or *Yields:* for generators)](#doc-function-returns)  
 Describe the semantics of the return value, including any type
 information that the type annotation does not provide. If the function
@@ -688,7 +536,6 @@ mat\_b), where mat\_a is …, and …”. The auxiliary names in the docstring
 need not necessarily correspond to any internal names used in the
 function body (as those are not part of the API).
 
-<span id="doc-function-raises"></span>  
 [*Raises:*](#doc-function-raises)  
 List all exceptions that are relevant to the interface followed by a
 description. Use a similar exception name + colon + space or newline and
@@ -731,44 +578,6 @@ of the API part of the API).
             IOError: An error occurred accessing the smalltable.
         """
 
-Similarly, this variation on `Args:` with a line break is also allowed:
-
-    def fetch_smalltable_rows(
-        table_handle: smalltable.Table,
-        keys: Sequence[bytes | str],
-        require_all_keys: bool = False,
-    ) -> Mapping[bytes, tuple[str, ...]]:
-        """Fetches rows from a Smalltable.
-
-        Retrieves rows pertaining to the given keys from the Table instance
-        represented by table_handle.  String keys will be UTF-8 encoded.
-
-        Args:
-          table_handle:
-            An open smalltable.Table instance.
-          keys:
-            A sequence of strings representing the key of each table row to
-            fetch.  String keys will be UTF-8 encoded.
-          require_all_keys:
-            If True only rows with values set for all keys will be returned.
-
-        Returns:
-          A dict mapping keys to the corresponding table row data
-          fetched. Each row is represented as a tuple of strings. For
-          example:
-
-          {b'Serak': ('Rigel VII', 'Preparer'),
-           b'Zim': ('Irk', 'Invader'),
-           b'Lrrr': ('Omicron Persei 8', 'Emperor')}
-
-          Returned keys are always bytes.  If a key from the keys argument is
-          missing from the dictionary, then that row was not found in the
-          table (and require_all_keys must have been False).
-
-        Raises:
-          IOError: An error occurred accessing the smalltable.
-        """
-
 #### 3.8.4 Classes
 
 Classes should have a docstring below the class definition describing
@@ -805,7 +614,7 @@ what the class instance represents. This implies that subclasses of
 the context in which it might occur. The class docstring should not
 repeat unnecessary information, such as that the class is a class.
 
-    # Yes:
+    # Example:
     class CheeseShopAddress:
       """The address of a cheese shop.
 
@@ -814,17 +623,6 @@ repeat unnecessary information, such as that the class is a class.
 
     class OutOfCheeseError(Exception):
       """No more cheese is available."""
-
-    # No:
-    class CheeseShopAddress:
-      """Class that describes the address of a cheese shop.
-
-      ...
-      """
-
-    class OutOfCheeseError(Exception):
-      """Raised when no more cheese is available."""
-
 
 #### 3.8.5 Block and Inline Comments
 
@@ -879,7 +677,7 @@ when the parameters are all strings. Use your best judgment to decide
 between string formatting options. A single join with `+` is okay but do
 not format with `+`.
 
-    Yes: x = f'name: {name}; score: {n}'
+    Example: x = f'name: {name}; score: {n}'
          x = '%s, %s!' % (imperative, expletive)
          x = '{}, {}'.format(first, second)
          x = 'name: %s; score: %d' % (name, n)
@@ -900,7 +698,7 @@ substring to a list and `''.join` the list after the loop terminates, or
 write each substring to an `io.StringIO` buffer. These techniques
 consistently have amortized-linear run-time complexity.
 
-    Yes: items = ['<table>']
+    Example: items = ['<table>']
          for last_name, first_name in employee_list:
              items.append('<tr><td>%s, %s</td></tr>' % (last_name, first_name))
          items.append('</table>')
@@ -916,7 +714,7 @@ Pick `'` or `"` and stick with it. It is okay to use the other quote
 character on a string to avoid the need to backslash-escape quote
 characters within the string.
 
-    Yes:
+    Example:
       Python('Why are you hiding your eyes?')
       Gollum("I'm scared of lint errors.")
       Narrator('"Good!" thought a happy Python reviewer.')
@@ -942,19 +740,19 @@ to remove the initial space on each line:
     Don't do this.
     """
 
-      Yes:
+      Example:
       long_string = """This is fine if your use case can accept
           extraneous leading spaces."""
 
-      Yes:
+      Example:
       long_string = ("And this is fine if you cannot accept\n" +
                      "extraneous leading spaces.")
 
-      Yes:
+      Example:
       long_string = ("And this too is fine if you cannot accept\n"
                      "extraneous leading spaces.")
 
-      Yes:
+      Example:
       import textwrap
 
       long_string = textwrap.dedent("""\
@@ -976,12 +774,12 @@ arguments. Some logging implementations collect the unexpanded
 pattern-string as a queryable field. It also prevents spending time
 rendering a message that no logger is configured to output.
 
-      Yes:
+      Example:
       import tensorflow as tf
       logger = tf.get_logger()
       logger.info('TensorFlow Version is: %s', tf.__version__)
 
-      Yes:
+      Example:
       import os
       from absl import logging
 
@@ -1015,7 +813,7 @@ guidelines:
 
 3.  They should allow simple automated processing (e.g. grepping).
 
-      Yes:
+      Example:
       if not 0 <= p <= 1:
         raise ValueError(f'Not a probability: {p!r}')
 
@@ -1089,7 +887,7 @@ never do so with `try`/`except` since the `try` and `except` can’t both
 fit on the same line, and you can only do so with an `if` if there is no
 `else`.
 
-    Yes:
+    Example:
 
       if foo: bar(foo)
 
@@ -1393,18 +1191,11 @@ Use explicit `X | None` instead of implicit. Earlier versions of PEP 484
 allowed `a: str = None` to be interpreted as `a: str | None = None`, but
 that is no longer the preferred behavior.
 
-    Yes:
+    Example:
     def modern_or_union(a: str | int | None, b: str | None = None) -> str:
       ...
     def union_optional(a: Union[str, int, None], b: Optional[str] = None) -> str:
       ...
-
-    No:
-    def nullable_union(a: Union[None, str]) -> str:
-      ...
-    def implicit_optional(a: str = None) -> str:
-      ...
-
 
 #### 3.19.9 Tuples vs Lists
 
