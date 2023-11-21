@@ -99,17 +99,6 @@ Exceptions must follow certain conditions:
         protecting a thread from crashing by guarding its outermost
         block.
 
-    Python is very tolerant in this regard and `except:` will really
-    catch everything including misspelled names, sys.exit() calls,
-    Ctrl+C interrupts, unittest failures and all kinds of other
-    exceptions that you simply don’t want to catch.
-
--   Minimize the amount of code in a `try`/`except` block. The larger
-    the body of the `try`, the more likely that an exception will be
-    raised by a line of code that you didn’t expect to raise an
-    exception. In those cases, the `try`/`except` block hides a real
-    error.
-
 -   Use the `finally` clause to execute code whether or not an exception
     is raised in the `try` block. This is often useful for cleanup,
     i.e., closing a file.
@@ -231,18 +220,9 @@ it executes a yield statement. After it yields a value, the runtime
 state of the generator function is suspended until the next value is
 needed.
 
-Simpler code, because the state of local variables and control flow are
-preserved for each call. A generator uses less memory than a function
-that creates an entire list of values at once.
-
-Fine. Use “Yields:” rather than “Returns:” in the docstring for
+Use “Yields:” rather than “Returns:” in the docstring for
 generator functions.
 
-If the generator manages an expensive resource, make sure to force the
-clean up.
-
-A good way to do the clean up is by wrapping the generator with a
-context manager [PEP-0533](https://peps.python.org/pep-0533/).
 
 ### 2.10 Lambda Functions
 
@@ -254,11 +234,7 @@ statement.
 
 Okay to use them for one-liners. If the code inside the lambda function
 is longer than 60-80 chars, it’s probably better to define it as a
-regular [nested function](#lexical-scoping).
-
-For common operations like multiplication, use the functions from the
-`operator` module instead of lambda functions. For example, prefer
-`operator.mul` to `lambda x, y: x * y`.
+regular nested function.
 
 
 ### 2.11 Conditional Expressions
@@ -271,57 +247,6 @@ statement when things get more complicated.
         one_line = 'yes' if predicate(value) else 'no'
         slightly_split = ('yes' if predicate(value)
                           else 'no, nein, nyet')
-
-
-### 2.14 True/False Evaluations
-
-
-Use the “implicit” false if possible, e.g., `if foo:` rather than
-`if foo != []:`. There are a few caveats that you should keep in mind
-though:
-
--   Always use `if foo is None:` (or `is not None`) to check for a
-    `None` value. E.g., when testing whether a variable or argument that
-    defaults to `None` was set to some other value. The other value
-    might be a value that’s false in a boolean context!
-
--   Never compare a boolean variable to `False` using `==`. Use
-    `if not x:` instead. If you need to distinguish `False` from `None`
-    then chain the expressions, such as `if not x and x is not None:`.
-
--   For sequences (strings, lists, tuples), use the fact that empty
-    sequences are false, so `if seq:` and `if not seq:` are preferable
-    to `if len(seq):` and `if not len(seq):` respectively.
-
--   When handling integers, implicit false may involve more risk than
-    benefit (i.e., accidentally handling `None` as 0). You may compare a
-    value which is known to be an integer (and is not the result of
-    `len()`) against the integer 0.
-
-        Example: if not users:
-                 print('no users')
-
-             if i % 10 == 0:
-                 self.handle_multiple_of_ten()
-
-             def f(x=None):
-                 if x is None:
-                     x = []
-
-        No:  if len(users) == 0:
-                 print('no users')
-
-             if not i % 10:
-                 self.handle_multiple_of_ten()
-
-             def f(x=None):
-                 x = x or []
-
--   Note that `'0'` (i.e., `0` as string) evaluates to true.
-
--   Note that Numpy arrays may raise an exception in an implicit boolean
-    context. Prefer the `.size` attribute when testing emptiness of a
-    `np.array` (e.g. `if not users.size`).
 
 
 
