@@ -292,22 +292,18 @@ a: SomeType = some_func()
 
 #### 3.2.1 General Rules
 
+It is encouraged, but not required, to annotate all the functions in a module. However, it is recommended to use type annotations in the following cases:
 
-- It is encouraged, but not required, to annotate all the functions in a module.
+- Annotate code as it becomes stable from a types perspective. 
+- Annotate code that is prone to type-related errors, such as previous bugs or complexity.
+- Annotate code that is difficult to understand.
+- Annotate all public APIs.
 
-    - At the very least, annotate your public APIs.
-    - Use your judgment to strike a good balance between safety and clarity on one hand, and flexibility on the other.
-    - Annotate code that is prone to type-related errors (such as previous bugs or complexity).
-    - Annotate code that is difficult to understand.
-    - Annotate code as it becomes stable from a types perspective. In many cases, you can annotate all the functions in mature code without sacrificing too much flexibility.
-
-- Make sure to familiarize yourself with [PEP-484](https://peps.python.org/pep-0484/).
+Use your judgment to find a good balance between safety and clarity, as well as flexibility. Make sure to familiarize yourself with PEP-484: https://peps.python.org/pep-0484/.
 
 #### 3.2.2 NoneType
 
-It is recommended to use the explicit form "X | None" instead of the implicit form.
-
-Here are the corrected versions of the functions:
+When a function has an argument of type `NoneType`, it is recommended to use the explicit annotation form `X | None` as shown in the following examples:
 
 ```python
 def modern_or_union(a: str | int | None, b: str | None = None) -> str:
@@ -326,7 +322,7 @@ a: list[int] = [1, 2, 3]
 b: tuple[int, ...] = (1, 2, 3)
 c: tuple[int, str, float] = (1, "2", 3.5)
 ```
-#### 3.2 Docstrings
+### 3.2 Docstrings
 
 Python uses docstrings to document code. A docstring is a string that is the first statement in a package, module, class, or function. These strings can be extracted automatically through the __doc__ member of the object and are used by pydoc. (Try running pydoc on your module to see how it looks.) Always use the three-double-quote """ format for docstrings (per PEP 257).
 
@@ -342,7 +338,7 @@ If the description is too long to fit on one line (80 characters), use a hanging
 The description should include the required type(s) if the code does not have a corresponding type annotation. 
 If a function accepts `*foo` (variable length argument lists) and/or `**bar` (arbitrary keyword arguments), they should be listed as `*foo` and `**bar`.
 
-*Returns* (or [Yields] for generators)
+*Returns* (or *Yields* for generators)
 Describe the meaning of the return value, including any type information that is not provided by the type annotation. If the function only returns None, this section is not necessary.
 
 *Raises*
