@@ -157,6 +157,19 @@ A generator function produces an iterator that generates a value each time it ex
 
 When documenting generator functions, please use "Yields:" instead of "Returns:" in the docstring.
 
+```python
+from collctions.abs import Iterator
+
+def simple_generator(n: int) -> Iterator[int]:
+    i = 0
+    while i < n:
+        yield i
+        i += 1
+
+gen = simple_generator(5)
+for i in gen:
+    print(i)
+```
 
 ### 2.7 Lambda Functions
 
