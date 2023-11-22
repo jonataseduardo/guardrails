@@ -30,14 +30,9 @@ This style guide heavily relies on the [Google Style Guide](https://google.githu
 
 ## 2 General Rules
 
-### 2.1 Lint
+### 2.1 Lint and format
 
-`pylint` is a tool for finding bugs and style problems in Python source
-code. 
-
-Run `pylint` over your code using this
-[pylintrc](https://google.github.io/styleguide/pylintrc).
-
+Use [ruff](https://github.com/astral-sh/ruff) to lint and format you code. 
 
 ### 2.2 Imports
 
@@ -386,7 +381,7 @@ def calculate_sum(a: int, b: int, *args, **kwargs) -> int:
     return a + b + sum(args)
 ```
 
-#### 3.3 Error Messages
+### 3.3 Error Messages
 
 Write a example python of error message that following the rules:
 
