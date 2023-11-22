@@ -322,7 +322,7 @@ a: list[int] = [1, 2, 3]
 b: tuple[int, ...] = (1, 2, 3)
 c: tuple[int, str, float] = (1, "2", 3.5)
 ```
-### 3.2 Docstrings
+### 3.3 Docstrings
 
 Python uses docstrings to document code. A docstring is a string that is the first statement in a package, module, class, or function. These strings can be extracted automatically through the __doc__ member of the object and are used by pydoc. (Try running pydoc on your module to see how it looks.) Always use the three-double-quote """ format for docstrings (per PEP 257).
 
@@ -377,7 +377,7 @@ def calculate_sum(a: int, b: int, *args, **kwargs) -> int:
     return a + b + sum(args)
 ```
 
-### 3.3 Error Messages
+### 3.4 Error Messages
 
 Error messages, such as message strings on exceptions like `ValueError`, or messages shown to the user, should adhere to three guidelines:
 
@@ -399,7 +399,7 @@ except ValueError as e:
     print(f"Error: {e}")
 ```
 
-### 3.4 Strings
+### 3.5 Strings
 
 Please utilize an [f-string](https://docs.python.org/3/reference/lexical_analysis.html#f-strings) and refrain from using the `+` and `+=` operators to accumulate a string within a loop.
 
@@ -411,22 +411,22 @@ long_string = textwrap.dedent("""\
     will remove common leading spaces in each line.""")
 ```
 
-#### 3.4.1 Mathematical Notation
+#### 3.5.1 Mathematical Notation
 
 You can use LaTeX for mathematical notation in docstrings and other suitable places, such as figure labels and captions.
 
-### 3.5 Comments
+### 3.6 Comments
 
 Use comments in your code sparingly. Comments should be used to explain why the code was written, not what the code is doing. If the code is too difficult to understand, try breaking it down into simpler parts.
 
-#### 3.5.1 TODO Comments
+#### 3.6.1 TODO Comments
 
 Please use `TODO` comments for code that is temporary, a short-term solution, or good enough but not perfect.
 
 If your `TODO` is in the form of "At a future date do something," please ensure that you either provide a specific date ("Fix by November 2009") or a specific event ("Remove this code when all clients can handle XML responses") that future code maintainers will understand. Issues are perfect for tracking this.
 
 
-### 3.5 Main
+### 3.7 Main
 
 Please include the statement `if __name__ == "__main__"` in your code. This practice is advantageous for organizing code, promoting reusability, avoiding unintended consequences, and facilitating testing. By using this statement, specific sections of the code will only run when the file is executed directly, rather than when it is imported as a module in another script. This prevents undesired side effects when the module is imported and enables the file to be independently executed for testing purposes. Additionally, it enhances code reusability as functions and classes defined in the script can be utilized in other scripts without executing the entire script.
 
@@ -438,6 +438,6 @@ if __name__ == '__main__':
     main()
 ```
 
-### 3.6 Function length
+### 3.8 Function length
 
 Prefer small and focused functions. Long functions may be necessary in certain cases, so there is no strict limit on function length. As a general guideline, if a function exceeds approximately 40 lines, consider whether it can be divided without compromising the program's structure.
