@@ -1,9 +1,34 @@
-[styleguide](https://google.github.io/styleguide/)
-==================================================
-
-Google Python Style Guide
+Python Style Guide
 =========================
+## 1 The Zen of Python
 
+Before coding, remember the Zen of Python [PEP20](https://peps.python.org/pep-0020/)
+
+```
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
+```
+
+This style guide heavily relies on the [Google Style Guide](https://google.github.io/styleguide/pyguide.html). Therefore, topics not covered in this document can refer to the Google Style Guide for guidance.
+
+## 2 General Rules
 
 ### 2.1 Lint
 
@@ -36,9 +61,11 @@ individual classes or functions.
 
 For example the module `sound.effects.echo` may be imported as follows:
 
+```python
     from sound.effects import echo
     ...
     echo.EchoFilter(input, output, delay=0.7, atten=4)
+```
 
 
 Make the following section of a markdown document shorter 
@@ -48,16 +75,13 @@ The
 
 Exceptions must follow certain conditions:
 
-Considering theses rules bellow create an example of a simple function that reads data and uses try, expect and assert:
+To create an example of a simple function that reads data and uses try, except, and assert, consider the following rules:
 
-Follow these rules for exceptions:
-    - Don't use catch-all `except:` statements, or catch `Exception` unless you're re-raising the exception or creating an isolation point where exceptions are recorded and suppressed.
-    - Use built-in exception classes when appropriate. For instance, raise a `ValueError` for a programming error like a violated precondition.  
-        Don't use `assert` for public API argument validation. Use `assert` for internal correctness, not for enforcing correct usage or indicating unexpected events. 
-        Use `raise` for these cases. 
-        - Libraries/packages can define their own exceptions, but they should inherit from an existing exception class. Exception names should end in `Error` and avoid repetition (`foo.FooError`).
-
-    - Use `finally` to execute code regardless of whether an exception is raised in the `try` block. This is often used for cleanup, like closing a file.
+- Avoid using catch-all `except:` statements or catching `Exception` unless you are re-raising the exception or creating an isolation point where exceptions are recorded and suppressed.
+- Use built-in exception classes when appropriate. For example, raise a `ValueError` for a programming error such as a violated precondition. 
+- Use `assert` for internal correctness and use `raise` to indicate unexpected events or enforce correct usage.
+- Libraries/packages can define their own exceptions, but they should inherit from an existing exception class. Exception names should end in `Error` and avoid repetition (e.g., `foo.FooError`).
+- Use `finally` to execute code regardless of whether an exception is raised in the `try` block. This is often used for cleanup tasks, such as closing a file.
 
 Example:
 
@@ -130,7 +154,7 @@ for line in afile: ...
 for k, v in adict.items(): ...
 ```
 
-### 2.9 Generators
+### 2.6 Generators
 
 Please use generators as necessary.
 
@@ -139,12 +163,12 @@ A generator function produces an iterator that generates a value each time it ex
 When documenting generator functions, please use "Yields:" instead of "Returns:" in the docstring.
 
 
-### 2.10 Lambda Functions
+### 2.7 Lambda Functions
 
 Lambdas are used to define anonymous functions within an expression, rather than a statement. They are suitable for one-liners. However, if the code inside the lambda function exceeds 60-80 characters, it is generally preferable to define it as a regular nested function.
 
 
-### 2.11 Conditional Expressions
+### 2.8 Conditional Expressions
 
 
 One-line conditional expressions are acceptable to use for simple cases. Each portion must fit on one line: true-expression, if-expression, else-expression. Use a complete if statement when things become more complicated.
@@ -153,7 +177,7 @@ One-line conditional expressions are acceptable to use for simple cases. Each po
 one_line = 'yes' if predicate(value) else 'no'
 ```
 
-### 2.17 Function and Method Decorators
+### 2.9 Function and Method Decorators
 
 Use decorators wisely when there is a clear advantage. Decorators should follow the same import and naming conventions as functions. The pydoc for decorators should explicitly state that the function is a decorator. It is important to write unit tests for decorators. Try to avoid using `staticmethod` and limit the usage of `classmethod`.
 
@@ -177,105 +201,7 @@ is equivalent to:
 3 Python Style Rules
 --------------------
 
-#### 3.8.1 Docstrings
-
-Python uses docstrings to document code. A docstring is a string that is the first statement in a package, module, class, or function. These strings can be extracted automatically through the __doc__ member of the object and are used by pydoc. (Try running pydoc on your module to see how it looks.) Always use the three-double-quote """ format for docstrings (per PEP 257).
-
-A docstring is required for any function that meets one or more of the following criteria:
-
-- It is part of the public API.
-- It has a nontrivial size.
-- It has non-obvious logic.
-
-[Args]
-Each parameter should be listed by name, followed by a description separated by a colon and either a space or a newline. 
-If the description is too long to fit on one line (80 characters), use a hanging indent of 2 or 4 spaces after the parameter name.
-The description should include the required type(s) if the code does not have a corresponding type annotation. 
-If a function accepts `*foo` (variable length argument lists) and/or `**bar` (arbitrary keyword arguments), they should be listed as `*foo` and `**bar`.
-
-[Returns] (or [Yields] for generators)
-Describe the meaning of the return value, including any type information that is not provided by the type annotation. If the function only returns None, this section is not necessary.
-
-[Raises]
-List all relevant exceptions for the interface, followed by a description. Use a similar format as described in [Args].
-
-[Example] (Optional) 
-Write a prompt exemple of the function usage
-
-[References]  (Optional)
-Write a list of links of usefull references
-
-
-```python
-def calculate_sum(a: int, b: int, *args, **kwargs) -> int:
-    """
-    Calculates the sum of two numbers, with optional additional numbers.
-    Args:
-        a (int): The first number to add.
-        b (int): The second number to add.
-        *args (int): Optional additional numbers to add.
-        **kwargs: Optional keyword arguments. Currently unused.
-    Returns:
-        int: The sum of a, b and any additional numbers.
-    Raises:
-        TypeError: If any of the arguments are not integers.
-    Example:
-        >>> calculate_sum(1, 2)
-        3
-        >>> calculate_sum(1, 2, 3, 4)
-        10
-    References:
-        https://docs.python.org/3/tutorial/controlflow.html#defining-functions
-    """
-    if not all(isinstance(x, int) for x in (a, b) + args):
-        raise TypeError('All arguments must be integers')
-    return a + b + sum(args)
-```
-
-
-### 3.10 Strings
-
-Please utilize an [f-string](https://docs.python.org/3/reference/lexical_analysis.html#f-strings) and refrain from using the `+` and `+=` operators to accumulate a string within a loop.
-
-Multi-line strings do not align with the indentation of the rest of the program. If you want to avoid adding extra space in the string, you can either use concatenated single-line strings or a multi-line string with [`textwrap.dedent()`](https://docs.python.org/3/library/textwrap.html#textwrap.dedent) to remove the initial space on each line:
-
-```python
-long_string = textwrap.dedent("""\
-    This is also acceptable, as textwrap.dedent()
-    will remove common leading spaces in each line.""")
-```
-
-#### 3.10.2 Error Messages
-Write a example python of error message that following the rules:
-
-Error messages, such as message strings on exceptions like `ValueError`, or messages shown to the user, should adhere to three guidelines:
-
-1. The message should accurately reflect the specific error condition.
-2. Interpolated pieces should always be easily identifiable.
-3. They should be designed to allow for simple automated processing, such as grepping.
-
-```python
-def divide_numbers(numerator: int | float, denominator: int | float) -> float:
-    if not isinstance(numerator, (int, float)) or not isinstance(denominator, (int, float)):
-        raise ValueError(f"Both numerator ({numerator}) and denominator ({denominator}) must be numbers.")
-    if denominator == 0:
-        raise ValueError("Denominator cannot be zero.")
-    return numerator / denominator
-
-try:
-    divide_numbers(10, 'a')
-except ValueError as e:
-    print(f"Error: {e}")
-```
-
-### 3.12 TODO Comments
-
-Please use `TODO` comments for code that is temporary, a short-term solution, or good enough but not perfect.
-
-If your `TODO` is in the form of "At a future date do something," please ensure that you either provide a specific date ("Fix by November 2009") or a specific event ("Remove this code when all clients can handle XML responses") that future code maintainers will understand. Issues are perfect for tracking this.
-
-
-### 3.16 Naming
+### 3.1 Naming
 
 Function names, variable names, and file names should be descriptive; avoid abbreviations. In particular, do not use abbreviations that are ambiguous or unfamiliar to readers outside your project.
 
@@ -284,8 +210,7 @@ Always use a `.py` filename extension. Never use dashes.
 Use descriptive names such as `module_name`, `package_name`, `ClassName`, `method_name`, `ExceptionName`, `function_name`, `GLOBAL_CONSTANT_NAME`, `global_var_name`, `instance_var_name`, `function_parameter_name`, `local_var_name`, `query_proper_noun_for_thing`, and `send_acronym_via_https`.
 
 
-
-#### 3.16.4 Guidelines derived from [Guido](https://en.wikipedia.org/wiki/Guido_van_Rossum)’s Recommendations
+#### 3.1.1 Guidelines derived from [Guido](https://en.wikipedia.org/wiki/Guido_van_Rossum)’s Recommendations
 
 <table>
 <thead>
@@ -354,58 +279,7 @@ Use descriptive names such as `module_name`, `package_name`, `ClassName`, `metho
 </tbody>
 </table>
 
-
-#### 3.16.5 Mathematical Notation
-
-You can use LaTeX for mathematical notation in docstrings and other suitable places, such as figure labels and captions.
-
-### 3.17 Main
-
-In Python, `pydoc` as well as unit tests require modules to be
-importable. If a file is meant to be used as an executable, its main
-functionality should be in a `main()` function, and your code should
-always check `if __name__ == '__main__'` before executing your main
-program, so that it is not executed when the module is imported.
-
-When using [absl](https://github.com/abseil/abseil-py), use `app.run`:
-
-    from absl import app
-    ...
-
-    def main(argv: Sequence[str]):
-        # process non-flag arguments
-        ...
-
-    if __name__ == '__main__':
-        app.run(main)
-
-Otherwise, use:
-
-    def main():
-        ...
-
-    if __name__ == '__main__':
-        main()
-
-All code at the top level will be executed when the module is imported.
-Be careful not to call functions, create objects, or perform other
-operations that should not be executed when the file is being `pydoc`ed.
-
-### 3.18 Function length
-
-Prefer small and focused functions.
-
-We recognize that long functions are sometimes appropriate, so no hard
-limit is placed on function length. If a function exceeds about 40
-lines, think about whether it can be broken up without harming the
-structure of the program.
-
-Even if your long function works perfectly now, someone modifying it in
-a few months may add new behavior. This could result in bugs that are
-hard to find. Keeping your functions short and simple makes it easier
-for other people to read and modify your code.
-
-### 3.19 Type Annotations
+### 3.2 Type Annotations
 
 Type annotations enhance the readability and maintainability of your code. They enable the use of a type checker that can convert numerous runtime errors into compile-time errors.
 
@@ -421,7 +295,7 @@ You can also declare the type of a variable using a similar syntax as described 
 a: SomeType = some_func()
 ```
 
-#### 3.19.1 General Rules
+#### 3.2.1 General Rules
 
 
 - It is encouraged, but not required, to annotate all the functions in a module.
@@ -434,7 +308,7 @@ a: SomeType = some_func()
 
 - Make sure to familiarize yourself with [PEP-484](https://peps.python.org/pep-0484/).
 
-#### 3.19.5 NoneType
+#### 3.2.2 NoneType
 
 It is recommended to use the explicit form "X | None" instead of the implicit form.
 
@@ -448,7 +322,7 @@ def union_optional(a: Union[str, int, None], b: Optional[str] = None) -> str:
   ...
 ```
 
-#### 3.19.9 Tuples vs Lists
+#### 3.2.3 Tuples vs Lists
 
 Typed lists can only contain objects of the same type. Typed tuples can have either a single repeated type or a set number of elements with different types. The latter is commonly used as the return type from a function.
 
@@ -457,3 +331,138 @@ a: list[int] = [1, 2, 3]
 b: tuple[int, ...] = (1, 2, 3)
 c: tuple[int, str, float] = (1, "2", 3.5)
 ```
+#### 3.2 Docstrings
+
+Python uses docstrings to document code. A docstring is a string that is the first statement in a package, module, class, or function. These strings can be extracted automatically through the __doc__ member of the object and are used by pydoc. (Try running pydoc on your module to see how it looks.) Always use the three-double-quote """ format for docstrings (per PEP 257).
+
+A docstring is required for any function that meets one or more of the following criteria:
+
+- It is part of the public API.
+- It has a nontrivial size.
+- It has non-obvious logic.
+
+[Args]
+Each parameter should be listed by name, followed by a description separated by a colon and either a space or a newline. 
+If the description is too long to fit on one line (80 characters), use a hanging indent of 2 or 4 spaces after the parameter name.
+The description should include the required type(s) if the code does not have a corresponding type annotation. 
+If a function accepts `*foo` (variable length argument lists) and/or `**bar` (arbitrary keyword arguments), they should be listed as `*foo` and `**bar`.
+
+[Returns] (or [Yields] for generators)
+Describe the meaning of the return value, including any type information that is not provided by the type annotation. If the function only returns None, this section is not necessary.
+
+[Raises]
+List all relevant exceptions for the interface, followed by a description. Use a similar format as described in [Args].
+
+[Example] (Optional) 
+Write a prompt exemple of the function usage
+
+[References]  (Optional)
+Write a list of links of usefull references
+
+
+```python
+def calculate_sum(a: int, b: int, *args, **kwargs) -> int:
+    """
+    Calculates the sum of two numbers, with optional additional numbers.
+    Args:
+        a (int): The first number to add.
+        b (int): The second number to add.
+        *args (int): Optional additional numbers to add.
+        **kwargs: Optional keyword arguments. Currently unused.
+    Returns:
+        int: The sum of a, b and any additional numbers.
+    Raises:
+        TypeError: If any of the arguments are not integers.
+    Example:
+        >>> calculate_sum(1, 2)
+        3
+        >>> calculate_sum(1, 2, 3, 4)
+        10
+    References:
+        https://docs.python.org/3/tutorial/controlflow.html#defining-functions
+    """
+    if not all(isinstance(x, int) for x in (a, b) + args):
+        raise TypeError('All arguments must be integers')
+    return a + b + sum(args)
+```
+
+#### 3.3 Error Messages
+
+Write a example python of error message that following the rules:
+
+Error messages, such as message strings on exceptions like `ValueError`, or messages shown to the user, should adhere to three guidelines:
+
+1. The message should accurately reflect the specific error condition.
+2. Interpolated pieces should always be easily identifiable.
+3. They should be designed to allow for simple automated processing, such as grepping.
+
+```python
+def divide_numbers(numerator: int | float, denominator: int | float) -> float:
+    if not isinstance(numerator, (int, float)) or not isinstance(denominator, (int, float)):
+        raise ValueError(f"Both numerator ({numerator}) and denominator ({denominator}) must be numbers.")
+    if denominator == 0:
+        raise ValueError("Denominator cannot be zero.")
+    return numerator / denominator
+
+try:
+    divide_numbers(10, 'a')
+except ValueError as e:
+    print(f"Error: {e}")
+```
+
+### 3.4 Strings
+
+Please utilize an [f-string](https://docs.python.org/3/reference/lexical_analysis.html#f-strings) and refrain from using the `+` and `+=` operators to accumulate a string within a loop.
+
+Multi-line strings do not align with the indentation of the rest of the program. If you want to avoid adding extra space in the string, you can either use concatenated single-line strings or a multi-line string with [`textwrap.dedent()`](https://docs.python.org/3/library/textwrap.html#textwrap.dedent) to remove the initial space on each line:
+
+```python
+long_string = textwrap.dedent("""\
+    This is also acceptable, as textwrap.dedent()
+    will remove common leading spaces in each line.""")
+```
+
+#### 3.4.1 Mathematical Notation
+
+You can use LaTeX for mathematical notation in docstrings and other suitable places, such as figure labels and captions.
+
+### 3.5 TODO Comments
+
+Please use `TODO` comments for code that is temporary, a short-term solution, or good enough but not perfect.
+
+If your `TODO` is in the form of "At a future date do something," please ensure that you either provide a specific date ("Fix by November 2009") or a specific event ("Remove this code when all clients can handle XML responses") that future code maintainers will understand. Issues are perfect for tracking this.
+
+
+### 3.5 Main
+
+In Python, both `pydoc` and unit tests require modules to be importable. If a file is intended to be used as an executable, its main functionality should be placed in a `main()` function. Additionally, your code should always check `if __name__ == '__main__'` before executing the main program. This ensures that the main program is not executed when the module is imported.
+
+When using [absl](https://github.com/abseil/abseil-py), use `app.run` as follows:
+
+```python
+from absl import app
+...
+
+def main(argv: Sequence[str]):
+    # process non-flag arguments
+    ...
+
+if __name__ == '__main__':
+    app.run(main)
+```
+
+Otherwise, use the following structure:
+
+```python
+def main():
+    ...
+
+if __name__ == '__main__':
+    main()
+```
+
+All code at the top level will be executed when the module is imported. Take care not to call functions, create objects, or perform other operations that should not be executed when the file is being `pydoc`ed.
+
+### 3.6 Function length
+
+Prefer small and focused functions. Long functions may be necessary in certain cases, so there is no strict limit on function length. As a general guideline, if a function exceeds approximately 40 lines, consider whether it can be divided without compromising the program's structure.
