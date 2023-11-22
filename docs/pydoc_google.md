@@ -158,7 +158,7 @@ A generator function produces an iterator that generates a value each time it ex
 When documenting generator functions, please use "Yields:" instead of "Returns:" in the docstring.
 
 ```python
-from collctions.abs import Iterator
+from collections.abc import Iterator
 
 def simple_generator(n: int) -> Iterator[int]:
     i = 0
@@ -414,7 +414,7 @@ except ValueError as e:
 
 ### 3.5 String Manipulation
 
-Please use [f-strings](https://docs.python.org/3/reference/lexical_analysis.html#f-strings) as the preferred way of formatting strings. F-strings are easier to read and more efficient to execute compared to other string formatting methods like `` and `str.format()`. 
+Please use [f-strings](https://docs.python.org/3/reference/lexical_analysis.html#f-strings) as the preferred method for formatting strings. F-strings are easier to read and more efficient to execute compared to other string formatting methods like `` and `str.format()`.
 
 Example:
 
@@ -424,7 +424,14 @@ age = 25
 print(f"Hello, {name}. You are {age}.")
 ```
 
-If you want to avoid adding extra space in the string, refer to the use of [`textwrap.dedent()`](https://docs.python.org/3/library/textwrap.html#textwrap.dedent) for long strings that span multiple lines. It is recommended to use `textwrap.dedent()` to remove any common leading whitespace from every line in the input. This makes your code cleaner and more readable.
+The preferred way to break long string lines in Python is by using parentheses. Here is an example:
+```python
+long_string = ("This is a very long string that needs "
+               "to be broken into multiple lines for "
+               "better readability in the code.")
+```
+
+If you want to use tripple quotes and avoid adding extra space in the string, refer to the use of [`textwrap.dedent()`](https://docs.python.org/3/library/textwrap.html#textwrap.dedent) for long strings that span multiple lines. It is recommended to use `textwrap.dedent()` to remove any common leading whitespace from every line in the input. This makes your code cleaner and more readable.
 
 Example:
 
@@ -437,6 +444,8 @@ text = dedent("""
 """)
 print(text)
 ```
+
+#### 3.5.1 String Methods
 
 Prefer using [string methods](https://docs.python.org/3/library/stdtypes.html?highlight=startswith#string-methods) over [regular expressions](https://docs.python.org/3/library/re.html). Python's string methods are more readable and often faster than using regular expressions. Use string methods like `startswith()`, `endswith()`, `find()`, `replace()`, etc. whenever possible.
 
@@ -452,7 +461,7 @@ new_text = text.replace("world", "Python")
 print(new_text)
 ```
 
-#### 3.5.1 Mathematical Notation
+#### 3.5.2 Mathematical Notation
 
 You can use LaTeX for mathematical notation in docstrings and other suitable places, such as figure labels and captions.
 
