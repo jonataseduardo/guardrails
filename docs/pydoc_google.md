@@ -425,7 +425,7 @@ text = dedent("""
 print(text)
 ```
 
-Prefer using [string methods](https://docs.python.org/3/library/stdtypes.html?highlight=startswith#string-methods) over regular expressions. Python's string methods are more readable and often faster than using regular expressions. Use string methods like `startswith()`, `endswith()`, `find()`, `replace()`, etc. whenever possible.
+Prefer using [string methods](https://docs.python.org/3/library/stdtypes.html?highlight=startswith#string-methods) over [regular expressions](https://docs.python.org/3/library/re.html). Python's string methods are more readable and often faster than using regular expressions. Use string methods like `startswith()`, `endswith()`, `find()`, `replace()`, etc. whenever possible.
 
 Example:
 
