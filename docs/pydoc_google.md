@@ -383,8 +383,6 @@ def calculate_sum(a: int, b: int, *args, **kwargs) -> int:
 
 ### 3.3 Error Messages
 
-Write a example python of error message that following the rules:
-
 Error messages, such as message strings on exceptions like `ValueError`, or messages shown to the user, should adhere to three guidelines:
 
 1. The message should accurately reflect the specific error condition.
