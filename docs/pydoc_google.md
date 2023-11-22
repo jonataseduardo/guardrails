@@ -312,7 +312,7 @@ It is encouraged, but not required, to annotate all the functions in a module. H
 - Annotate code that is difficult to understand.
 - Annotate all public APIs.
 
-Use your judgment to find a good balance between safety and clarity, as well as flexibility. Make sure to familiarize yourself with PEP-484: https://peps.python.org/pep-0484/.
+Use your judgment to find a good balance between safety and clarity, as well as flexibility. Make sure to familiarize yourself with [PEP-484](https://peps.python.org/pep-0484/).
 
 #### 3.2.2 NoneType
 
