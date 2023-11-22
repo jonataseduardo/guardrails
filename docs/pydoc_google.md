@@ -336,22 +336,22 @@ A docstring is required for any function that meets one or more of the following
 - It has a nontrivial size.
 - It has non-obvious logic.
 
-[Args]
+*Args*
 Each parameter should be listed by name, followed by a description separated by a colon and either a space or a newline. 
 If the description is too long to fit on one line (80 characters), use a hanging indent of 2 or 4 spaces after the parameter name.
 The description should include the required type(s) if the code does not have a corresponding type annotation. 
 If a function accepts `*foo` (variable length argument lists) and/or `**bar` (arbitrary keyword arguments), they should be listed as `*foo` and `**bar`.
 
-[Returns] (or [Yields] for generators)
+*Returns* (or [Yields] for generators)
 Describe the meaning of the return value, including any type information that is not provided by the type annotation. If the function only returns None, this section is not necessary.
 
-[Raises]
-List all relevant exceptions for the interface, followed by a description. Use a similar format as described in [Args].
+*Raises*
+List all relevant exceptions for the interface, followed by a description. Use a similar format as described in *Args*.
 
-[Example] (Optional) 
+*Example* (Optional) 
 Write a prompt exemple of the function usage
 
-[References]  (Optional)
+*References*  (Optional)
 Write a list of links of usefull references
 
 
