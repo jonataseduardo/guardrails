@@ -426,7 +426,11 @@ long_string = textwrap.dedent("""\
 
 You can use LaTeX for mathematical notation in docstrings and other suitable places, such as figure labels and captions.
 
-### 3.5 TODO Comments
+### 3.5 Comments
+
+Use comments in your code sparingly. Comments should be used to explain why the code was written, not what the code is doing. If the code is too difficult to understand, try breaking it down into simpler parts.
+
+#### 3.5.1 TODO Comments
 
 Please use `TODO` comments for code that is temporary, a short-term solution, or good enough but not perfect.
 
@@ -435,23 +439,7 @@ If your `TODO` is in the form of "At a future date do something," please ensure 
 
 ### 3.5 Main
 
-In Python, both `pydoc` and unit tests require modules to be importable. If a file is intended to be used as an executable, its main functionality should be placed in a `main()` function. Additionally, your code should always check `if __name__ == '__main__'` before executing the main program. This ensures that the main program is not executed when the module is imported.
-
-When using [absl](https://github.com/abseil/abseil-py), use `app.run` as follows:
-
-```python
-from absl import app
-...
-
-def main(argv: Sequence[str]):
-    # process non-flag arguments
-    ...
-
-if __name__ == '__main__':
-    app.run(main)
-```
-
-Otherwise, use the following structure:
+Please include the statement `if __name__ == "__main__"` in your code. This practice is advantageous for organizing code, promoting reusability, avoiding unintended consequences, and facilitating testing. By using this statement, specific sections of the code will only run when the file is executed directly, rather than when it is imported as a module in another script. This prevents undesired side effects when the module is imported and enables the file to be independently executed for testing purposes. Additionally, it enhances code reusability as functions and classes defined in the script can be utilized in other scripts without executing the entire script.
 
 ```python
 def main():
@@ -460,8 +448,6 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-
-All code at the top level will be executed when the module is imported. Take care not to call functions, create objects, or perform other operations that should not be executed when the file is being `pydoc`ed.
 
 ### 3.6 Function length
 
