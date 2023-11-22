@@ -399,16 +399,44 @@ except ValueError as e:
     print(f"Error: {e}")
 ```
 
-### 3.5 Strings
+### 3.5 String Manipulation
 
-Please utilize an [f-string](https://docs.python.org/3/reference/lexical_analysis.html#f-strings) and refrain from using the `+` and `+=` operators to accumulate a string within a loop.
+Please use [f-strings](https://docs.python.org/3/reference/lexical_analysis.html#f-strings) as the preferred way of formatting strings. F-strings are easier to read and more efficient to execute compared to other string formatting methods like `` and `str.format()`. 
 
-Multi-line strings do not align with the indentation of the rest of the program. If you want to avoid adding extra space in the string, you can either use concatenated single-line strings or a multi-line string with [`textwrap.dedent()`](https://docs.python.org/3/library/textwrap.html#textwrap.dedent) to remove the initial space on each line:
+Example:
 
 ```python
-long_string = textwrap.dedent("""\
-    This is also acceptable, as textwrap.dedent()
-    will remove common leading spaces in each line.""")
+name = "John"
+age = 25
+print(f"Hello, {name}. You are {age}.")
+```
+
+If you want to avoid adding extra space in the string, refer to the use of [`textwrap.dedent()`](https://docs.python.org/3/library/textwrap.html#textwrap.dedent) for long strings that span multiple lines. It is recommended to use `textwrap.dedent()` to remove any common leading whitespace from every line in the input. This makes your code cleaner and more readable.
+
+Example:
+
+```python
+from textwrap import dedent
+text = dedent("""
+    Hello,
+    This is a long string
+    that spans multiple lines.
+""")
+print(text)
+```
+
+Prefer using [string methods](https://docs.python.org/3/library/stdtypes.html?highlight=startswith#string-methods) over regular expressions. Python's string methods are more readable and often faster than using regular expressions. Use string methods like `startswith()`, `endswith()`, `find()`, `replace()`, etc. whenever possible.
+
+Example:
+
+```python
+text = "Hello, world!"
+# Use startswith() instead of a regular expression
+if text.startswith("Hello"):
+    print("The text starts with 'Hello'")
+# Use replace() instead of a regular expression
+new_text = text.replace("world", "Python")
+print(new_text)
 ```
 
 #### 3.5.1 Mathematical Notation
