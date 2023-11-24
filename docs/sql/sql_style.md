@@ -8,7 +8,7 @@ SQL style guide
 - Field names should be in lowercase, keywords, and function names should all be in uppercase.
 - The "AS" keyword should be explicitly used when aliasing a field or table.
 
-You can format your query using sqlfluff with the following .sqlfluff configuration file.
+You can format your query using [sqlfluff](https://docs.sqlfluff.com/en/stable/) with the following .sqlfluff configuration file.
 
 ### Example SQL
 
@@ -97,14 +97,13 @@ SELECT * FROM joined
 ### Aggregations and Grouping
 
 -   If joining two or more tables, *always* prefix your column names with the table name. If only selecting from one table, prefixes are not needed.
--   Be explicit about your join type (i.e. write `inner join` instead of `join`).
--   Avoid table aliases in join conditions (especially initialisms) — it's harder to understand what the table called "c" is as compared to "customers".
--   Always move left to right to make joins easy to reason about - `right joins` often indicate that you should change which table you select `from` and which one you `join` to.
+-   Be explicit about your join type (i.e. write `INNER JOIN` instead of `JOIN`).
+-   Avoid table aliases in join conditions (especially initialisms) — it's harder to understand what the table called `c` is as compared to `customers`.
+-   Always move left to right to make joins easy to reason about - `RIGHT JOINS` often indicate that you should change which table you select `FROM` and which one you `JOIN` to.
 -   Ordering and grouping by a number (e.g. group by 1, 2) is preferred over listing the column names. Note that if you are grouping by more than a few columns, it may be worth revisiting your model design.
--   Prefer `union all` to `union` unless you explicitly want to remove duplicates.
- 
+-   Prefer `UNION ALL` to `UNION` unless you explicitly want to remove duplicates.
 -   When performance allows, CTEs should perform a single, logical unit of work.
--   CTE names should be as descriptive as necessary to convey their purpose, for example, `events_joined_to_users` instead of `user_events` (although `user_events` could be a good model name, it does not describe a specific function or transformation).
+-   CTE names should be as descriptive as necessary to convey their purpose, for example, `events_joined_to_users` instead of `user_events`.
 -   The last line of a model should be a `select *` from the final output CTE. 
 
 ### Optimize query operations
