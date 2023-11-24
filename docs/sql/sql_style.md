@@ -125,3 +125,6 @@ SELECT * FROM joined
 - If your query processes keys that are heavily skewed to a few values, filter your data as early as possible to avoid performance issues.
 - Data skew can also appear when you use `JOIN` clauses. To avoid performance issues associated with unbalanced joins, pre-filter rows from the table with the unbalanced key, split the query into two queries, or use the `SELECT DISTINCT` statement when specifying a subquery in the `WHERE` clause.
 
+### References
+
+For more information and specific examples on how to optimize queries, we encourage you to refer to the [Google Query Optimization Guide](https://cloud.google.com/bigquery/docs/best-practices-performance-compute).
