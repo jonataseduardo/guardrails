@@ -104,7 +104,7 @@ SELECT * FROM joined
 -   Prefer `UNION ALL` to `UNION` unless you explicitly want to remove duplicates.
 -   When performance allows, CTEs should perform a single, logical unit of work.
 -   CTE names should be as descriptive as necessary to convey their purpose, for example, `events_joined_to_users` instead of `user_events`.
--   The last line of a model should be a `select *` from the final output CTE. 
+-   The last line of a model should be a `SELECT *` from the final output CTE. 
 
 ### Optimize query operations
 
