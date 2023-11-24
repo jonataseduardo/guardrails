@@ -1,100 +1,98 @@
-How we style our SQL
+SQL style guide
 ====================
 
-Basics
------------------------------------------------------------------------------
+## Format
 
--   Indents should be two spaces.
+- Indents should be two spaces.
+- Lines of SQL should not exceed 88 characters (similar to Python Black).
+- Field names should be in lowercase, keywords, and function names should all be in uppercase.
+- The "AS" keyword should be explicitly used when aliasing a field or table.
 
--   Lines of SQL should not exceed 88 characters.
-
--   Field names, keywords, and function names should all be in lowercase.
-
--   The `as` keyword should be explicitly used when aliasing a field or table.
-
-
+You can format your query using sqlfluff with the following .sqlfluff configuration file.
 
 ### Example SQL
 
 ```sql
-    with
+WITH
 
-    my_data as (
+my_data AS (
 
-        select
-            field_1,
-            field_2,
-            field_3,
-            cancellation_date,
-            expiration_date,
-            start_date
+  SELECT
+    field_1,
+    field_2,
+    field_3,
+    cancellation_date,
+    expiration_date,
+    start_date
 
-        from {{ ref('my_data') }}
+  FROM `project.dataset.table` 
+),
 
-    ),
+some_cte AS (
 
-    some_cte as (
+  SELECT
+    id,
+    field_4,
+    field_5
 
-        select
-            id,
-            field_4,
-            field_5
+  FROM my_data 
 
-        from {{ ref('some_cte') }}
+),
 
-    ),
+some_cte_agg AS (
 
-    some_cte_agg as (
+  SELECT
+    id,
+    SUM(field_4) AS total_field_4,
+    MAX(field_5) AS max_field_5
 
-        select
-            id,
-            sum(field_4) as total_field_4,
-            max(field_5) as max_field_5
+  FROM some_cte
 
-        from some_cte
+  GROUP BY 1
 
-        group by 1
+),
 
-    ),
+joined AS (
 
-    joined as (
+  SELECT
+    my_data.field_1,
+    my_data.field_2,
+    my_data.field_3,
 
-        select
-            my_data.field_1,
-            my_data.field_2,
-            my_data.field_3,
+    -- use line breaks to visually separate calculations into blocks
+    CASE
+      WHEN
+        my_data.cancellation_date IS NULL
+        AND my_data.expiration_date IS NOT NULL
+        THEN expiration_date
+      WHEN my_data.cancellation_date IS NULL
+        THEN my_data.start_date + 7
+      ELSE my_data.cancellation_date
+    END AS cancellation_date,
 
-            -- use line breaks to visually separate calculations into blocks
-            case
-                when my_data.cancellation_date is null
-                    and my_data.expiration_date is not null
-                    then expiration_date
-                when my_data.cancellation_date is null
-                    then my_data.start_date + 7
-                else my_data.cancellation_date
-            end as cancellation_date,
+    some_cte_agg.total_field_4,
+    some_cte_agg.max_field_5
 
-            some_cte_agg.total_field_4,
-            some_cte_agg.max_field_5
+  FROM my_data
 
-        from my_data
+  LEFT JOIN some_cte_agg
+    ON my_data.id = some_cte_agg.id
 
-        left join some_cte_agg
-            on my_data.id = some_cte_agg.id
-
-        where my_data.field_1 = 'abc' and
-            (
-                my_data.field_2 = 'def' or
-                my_data.field_2 = 'ghi'
-            )
-
-        having count(*) > 1
-
+  WHERE
+    my_data.field_1 = 'abc'
+    AND (
+      my_data.field_2 = 'def'
+      OR my_data.field_2 = 'ghi'
     )
 
-    select * from joined
+  HAVING COUNT(*) > 1
 
+)
+
+SELECT * FROM joined
 ```
+
+## Best practices
 
 ### Aggregations and Grouping
 
