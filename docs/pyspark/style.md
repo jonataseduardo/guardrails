@@ -1,8 +1,6 @@
 
 # Use `select` statements to specify a schema contract
 
-Create a PySpark snippet that adheres to the following instructions:
-
 Use the `select` statement before transformations. This specifies a data contract. 
 Keep the select statements as simple as possible. Use an `alias` to name a new column or rename an old one. To change the type of a column, use the `cast` operator.
 
@@ -16,11 +14,12 @@ df = df.select(
 
 ```
 
-## Prefer implicit column selection to direct access
+## Column selection 
 
-This style is simpler, shorter and visually less polluted. 
+Use implicit column access on PySpark functions because this style is simpler, shorter, and visually less cluttered.
+
 ```python
-df = df.select('colA', F.lower('colB'), F.upper('colC'))
+df = df.select('col_a', F.lower('col_b'), F.upper('col_c'))
 ```
 
 It is recommended to use `.withColumn()` for single columns. However, when adding or manipulating tens or hundreds of columns, it is advisable to use a single `.select()` for better performance.
