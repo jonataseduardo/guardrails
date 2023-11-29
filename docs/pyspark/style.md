@@ -1,5 +1,4 @@
-
-# Use `select` statements to specify a schema contract
+## Use `select` statements to specify a schema contract
 
 Use the `select` statement before transformations. This specifies a data contract. 
 Keep the select statements as simple as possible. Use an `alias` to name a new column or rename an old one. To change the type of a column, use the `cast` operator.
@@ -14,7 +13,7 @@ df = df.select(
 
 ```
 
-## Column selection 
+### Column selection 
 
 Use implicit column access on PySpark functions because this style is simpler, shorter, and visually less cluttered.
 
@@ -32,7 +31,7 @@ If you need to add an empty column to satisfy a schema, always use `F.lit(None)`
 df = df.withColumn('foo', F.lit(None))
 ```
 
-# Logical operations
+## Logical operations
 
 Logical operations, which are often found within `.filter()` or `F.when()`, should be easy to read. It is recommended to keep logic expressions within the same code block to a maximum of three (3) expressions. If they become longer, it is advisable to extract complex logical operations into variables for improved readability.
 
@@ -46,7 +45,7 @@ is_active = (has_registration | has_operator)
 F.when(is_delivered | (delivery_date_passed & is_active), 'In Service')
 ```
 
-# Joins
+## Joins
 
 Specify how explicitly, even if the default is `(inner)`.  Prefer left joins over right joins for code readability. 
 Like in SQL avoid collisions in columns names by giving, alias the entire dataframe and select desired columns using the alias.
@@ -65,7 +64,7 @@ flights = flights.select(
 )
 ```
 
-# Chaining of expressions
+## Chaining of expressions
 
 Please exercise caution when chaining expressions into multi-line expressions if they have different behaviors or contexts. For example, it is advisable to avoid combining column creation or joining with selecting and filtering. This will enhance the readability of your code and will not impact performance if you utilize Spark's lazy evaluation.
 
@@ -103,7 +102,7 @@ def join_customers_with_shipping_address(customers, df_to_join):
 ```
 
 
-# Window Functions
+## Window Functions
 
 Always specify an explicit frame when using window functions, using either [row frames](https://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/expressions/WindowSpec.html#rowsBetween-long-long-) or [range frames](https://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/expressions/WindowSpec.html#rangeBetween-long-long-). If you do not specify a frame, Spark will generate one, in a way that might not be easy to predict. In particular, the generated frame will change depending on whether the window is ordered (see [here](https://github.com/apache/spark/blob/v3.0.1/sql/catalyst/src/main/scala/org/apache/spark/sql/catalyst/analysis/Analyzer.scala#L2899)). To see how this can be confusing, consider the following example:
 
@@ -147,7 +146,7 @@ df.select('key', F.last('num').over(w4).alias('last')).collect()
 # => [Row(key='a', last=4), Row(key='a', last=4), Row(key='a', last=4), Row(key='a', last=4)]
 ```
 
-## Dealing with nulls
+### Dealing with nulls
 
 Be explicit about the `ignorenulls` flag.
 
@@ -171,7 +170,7 @@ df_nulls.select('key', F.lead('num').over(w6).alias('lead')).collect()
 # => [Row(key='a', lead=1), Row(key='a', lead=2), Row(key='a', lead=None), Row(key='a', lead=None)]
 ```
 
-## Empty `partitionBy()`
+### Empty `partitionBy()`
 
 Spark window functions can be applied to all rows using a global frame. This is achieved by specifying zero columns in the partition by expression, like `W.partitionBy()`.
 
