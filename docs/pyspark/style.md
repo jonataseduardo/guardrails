@@ -1,17 +1,3 @@
-## Use `select` statements to specify a schema contract
-
-Use the `select` statement before transformations. This specifies a data contract. 
-Keep the select statements as simple as possible. Use an `alias` to name a new column or rename an old one. To change the type of a column, use the `cast` operator.
-
-```python
-df = df.select(
-    "column0",
-    F.col("column1").alias("new_column1"),
-    F.col("column2").cast("int").alias("new_column2"),
-    F.col("column3").cast("float").alias("new_column3")
-)
-
-```
 
 ### Column selection 
 
@@ -31,7 +17,22 @@ If you need to add an empty column to satisfy a schema, always use `F.lit(None)`
 df = df.withColumn('foo', F.lit(None))
 ```
 
-## Logical operations
+### Specify a schema contract
+
+Use the `select` statement before transformations. This specifies a data contract. 
+Keep the select statements as simple as possible. Use an `alias` to name a new column or rename an old one. To change the type of a column, use the `cast` operator.
+
+```python
+df = df.select(
+    "column0",
+    F.col("column1").alias("new_column1"),
+    F.col("column2").cast("int").alias("new_column2"),
+    F.col("column3").cast("float").alias("new_column3")
+)
+
+```
+
+### Logical operations
 
 Logical operations, which are often found within `.filter()` or `F.when()`, should be easy to read. It is recommended to keep logic expressions within the same code block to a maximum of three (3) expressions. If they become longer, it is advisable to extract complex logical operations into variables for improved readability.
 
@@ -47,8 +48,7 @@ F.when(is_delivered | (delivery_date_passed & is_active), 'In Service')
 
 ## Joins
 
-Specify how explicitly, even if the default is `(inner)`.  Prefer left joins over right joins for code readability. 
-Like in SQL avoid collisions in columns names by giving, alias the entire dataframe and select desired columns using the alias.
+When joining dataframes, it is recommended to specify the `how` option explicitly, even if the default is `(inner)`. It is preferable to use left joins instead of right joins for better code readability. Similar to SQL, to avoid collisions in column names, assign an alias to the entire dataframe and select the desired columns using the alias.
 
 
 ```python
